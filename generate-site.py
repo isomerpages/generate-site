@@ -10,7 +10,7 @@ def create_repo():
 
 		# Add baseurl into config yml
 		config_yml_path = repo_full_name + '/_config.yml'
-		command = 'echo "baseurl: /isomerpages-' + repo_name + '" >> ' + config_yml_path
+		command = 'echo "baseurl: \"\""' + config_yml_path
 		subprocess.call(command, shell=True)
 
 		return repo_full_name
@@ -74,7 +74,7 @@ def create_leftnav_pages(repo_full_name, nav_yml_path, config_yml_path):
 					subprocess.call(command, shell=True)
 					print "		Added leftnav page to navigation.yml"
 
-					leftnav_page_path = leftnav_folder_path + '/' + name + '.md'
+					leftnav_page_path = leftnav_folder_path + '/' + str(index) + '-' + name + '.md'
 					command = 'echo "---\nlayout: leftnav-page-content\ntitle: ' + to_human_readable_string(name) + '\npermalink: /' + leftnav_page_title + '/' + name + '/\nbreadcrumb: ' + to_human_readable_string(name) + '\ncollection_name: ' + leftnav_page_title + '\n---" >> ' + leftnav_page_path
 					subprocess.call(command, shell=True)
 					print "		Created file: " + leftnav_page_path
