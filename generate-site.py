@@ -154,6 +154,15 @@ def create_resource_room(repo_full_name, nav_yml_path, config_yml_path):
 		print "Failed to create resource room"
 		exit(0)
 
+def run_npm(repo_full_name):
+	try:
+		subprocess.check_call("npm init -y", cwd=repo_full_name, shell=True)
+		subprocess.check_call("npm install @isomerpages/isomerpages-travisci-scripts", cwd=repo_full_name, shell=True)
+		print "Isomer TravisCI scripts successfully installed! Remember to configure SLACK_URI on TravisCI and uncomment the code in travis-script.js for production."
+	except:
+		print "Failed to initialize npm package and/or install TravisCI script package from npm"
+		exit(0)
+
 
 def to_human_readable_string(string):
 	new_str = ''
@@ -176,6 +185,7 @@ def main():
 	create_simple_pages(repo_full_name, nav_yml_path)
 	create_leftnav_pages(repo_full_name, nav_yml_path, config_yml_path)
 	create_resource_room(repo_full_name, nav_yml_path, config_yml_path)
+	run_npm(repo_full_name)
 
 if __name__ == "__main__":
     main()
