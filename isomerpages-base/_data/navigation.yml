@@ -4,5 +4,8 @@
 #                                #
 ##################################
 
-- title: Contact Us
-  url: /contact-us/
+logo: /images/isomer-logo.svg
+
+links:
+  - title: Contact Us
+    url: /contact-us/

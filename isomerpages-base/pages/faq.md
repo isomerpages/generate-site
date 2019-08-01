@@ -1,8 +1,6 @@
 ---
-layout: simple-page
-permalink: /faq/
-breadcrumb: FAQ
 title: FAQ
+permalink: /faq/
 ---
 
 ### **FAQ**

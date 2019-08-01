@@ -5,15 +5,10 @@ import subprocess
 def create_repo():
 	try:
 		repo_name = raw_input("Type the name of the website you are creating (replace whitespaces with hyphens), e.g. for isomerpages/new-repo, type new-repo \n")
-		repo_full_name = "../isomerpages-" + repo_name
+		repo_full_name = "../" + repo_name
 		command = "cp -r isomerpages-base " + repo_full_name
 		subprocess.call(command, shell=True)
 		print repo_full_name + " directory created"
-
-		# Add baseurl into config yml
-		config_yml_path = repo_full_name + '/_config.yml'
-		command = 'echo "baseurl: \"\""' + config_yml_path
-		subprocess.call(command, shell=True)
 
 		return repo_full_name
 
@@ -30,12 +25,12 @@ def create_simple_pages(repo_full_name, nav_yml_path):
 			# Create simple page
 			for simple_page in simple_pages_list:
 				simple_path_path = repo_full_name + '/pages/' + simple_page + '.md'
-				command = 'echo "---\nlayout: simple-page\ntitle: ' + to_human_readable_string(simple_page) + '\npermalink: /' + simple_page + '/\nbreadcrumb: ' + to_human_readable_string(simple_page) + '\n---" >> ' + simple_path_path
+				command = 'echo "---\ntitle: ' + to_human_readable_string(simple_page) + '\npermalink: /' + simple_page + '/\n---" >> ' + simple_path_path
 				subprocess.call(command, shell=True)
 				print "		Created file: " + simple_path_path
 
 				# Add simple pages to navigation yml
-				command = 'echo "- title: ' + to_human_readable_string(simple_page) + '\n  url: /' + simple_page + '/" >> ' + nav_yml_path
+				command = 'echo "  - title: ' + to_human_readable_string(simple_page) + '\n    url: /' + simple_page + '/" >> ' + nav_yml_path
 				subprocess.call(command, shell=True)
 				print "		Added simple page to navigation.yml"
 
@@ -66,18 +61,14 @@ def create_leftnav_pages(repo_full_name, nav_yml_path, config_yml_path):
 				command = 'echo "  ' + leftnav_page_title + ':\n    output: true" >> ' + config_yml_path
 				subprocess.call(command, shell=True)
 
-				# Create leftnav pages in folder
-				for index, name in enumerate(leftnav_page_names.split(',')):
-					# Add leftnav pages to navigation yml
-					if index == 0:
-						command = 'echo "- title: ' + to_human_readable_string(leftnav_page_title) + '\n  url: /' + leftnav_page_title + '/' + name + '/\n  sub-links:\n  - title: ' + to_human_readable_string(name) + '\n    url: /' + leftnav_page_title + '/' + name + '/" >> ' + nav_yml_path
-					else:
-						command = 'echo "  - title: ' + to_human_readable_string(name) + '\n    url: /' + leftnav_page_title + '/' + name + '/" >> ' + nav_yml_path
-					subprocess.call(command, shell=True)
-					print "		Added leftnav page to navigation.yml"
+				command = 'echo "  - title: ' + to_human_readable_string(leftnav_page_title) + '\n    collection: ' + leftnav_page_title + '" >> ' + nav_yml_path
+				subprocess.call(command, shell=True)
+				print "		Added " + leftnav_page_title + " collection to navigation.yml"
 
+				# Create leftnav pages in folder
+				for index, name in enumerate(leftnav_page_names.split(',')):					
 					leftnav_page_path = leftnav_folder_path + '/' + str(index) + '-' + name + '.md'
-					command = 'echo "---\nlayout: leftnav-page-content\ntitle: ' + to_human_readable_string(name) + '\npermalink: /' + leftnav_page_title + '/' + name + '/\nbreadcrumb: ' + to_human_readable_string(name) + '\ncollection_name: ' + leftnav_page_title + '\n---" >> ' + leftnav_page_path
+					command = 'echo "---\ntitle: ' + to_human_readable_string(name) + '\npermalink: /' + leftnav_page_title + '/' + name + '/\n---" >> ' + leftnav_page_path
 					subprocess.call(command, shell=True)
 					print "		Created file: " + leftnav_page_path
 
@@ -93,10 +84,10 @@ def create_resource_room(repo_full_name, nav_yml_path, config_yml_path):
 			resource_title = config_array[0]
 			resource_subcategory_names = config_array[1]
 
-			homepage_yml_path = repo_full_name + '/_data/homepage.yml'
-			command = 'echo "resources-title: Resources\nresources-subtitle: Be in the know\nresources-more-button: More Resources\nresources-more-button-url: ' + resource_title + '/" >> ' + homepage_yml_path
+			homepage_path = repo_full_name + '/index.md'
+			command = 'echo "    - resources:\n        title: Media\n        subtitle: Learn more\n        button: View More" >> ' + homepage_path
 			subprocess.call(command, shell=True)
-			print "Updated homepage yml file: " + homepage_yml_path
+			print "Updated homepage file: " + homepage_path
 
 			# Create resource folder
 			resource_folder_path = repo_full_name + '/' + resource_title
@@ -106,12 +97,12 @@ def create_resource_room(repo_full_name, nav_yml_path, config_yml_path):
 			print "Created resources folder: " + resource_folder_path
 
 			# Create index file in resource folder
-			command = 'echo "---\nlayout: resources\ntitle: '+ to_human_readable_string(resource_title) + '\nfile_url: /'+ resource_title + '/\nbreadcrumb: '+ to_human_readable_string(resource_title) + '\n---" >> ' + resource_index_path
+			command = 'echo "---\nlayout: resources\ntitle: '+ to_human_readable_string(resource_title) + '\n---" >> ' + resource_index_path
 			subprocess.call(command, shell=True)
 			print "Created resources index html: " + resource_index_path
 
 			# Add resources to navigation yml
-			command = 'echo "- title: ' + to_human_readable_string(resource_title) + '\n  url: /' + resource_title + '/\n  sub-links:\n  - title: All\n    url: /' + resource_title + '/" >> ' + nav_yml_path
+			command = 'echo "  - title: ' + to_human_readable_string(resource_title) + '\n    resource_room: true" >> ' + nav_yml_path
 			subprocess.call(command, shell=True)
 			print "		Added resources to navigation.yml"
 
@@ -123,7 +114,7 @@ def create_resource_room(repo_full_name, nav_yml_path, config_yml_path):
 				resource_subcategory_folder_path = resource_folder_path + '/' + name
 				resource_subcategory_index_path = resource_subcategory_folder_path + '/index.html'
 				resource_subcategory_posts_folder_path = resource_subcategory_folder_path + '/_posts'
-				resource_subcategory_post_path = resource_subcategory_posts_folder_path + '/2018-01-01-test.md'
+				resource_subcategory_post_path = resource_subcategory_posts_folder_path + '/2019-01-01-test.md'
 
 				# Create subcategory folder
 				command = 'mkdir ' + resource_subcategory_folder_path
@@ -131,7 +122,7 @@ def create_resource_room(repo_full_name, nav_yml_path, config_yml_path):
 				print "		Created resources subcategory folder: " + resource_subcategory_folder_path
 
 				# Create index file in subcategory folder
-				command = 'echo "---\nlayout: resources-alt\ntitle: ' + to_human_readable_string(resource_title) + '\npermalink: /'+ resource_title + '/'+ name + '/\nbreadcrumb: '+ to_human_readable_string(name) + '\n---" >> ' + resource_subcategory_index_path
+				command = 'echo "---\nlayout: resources-alt\ntitle: ' + to_human_readable_string(resource_title) + '\n---" >> ' + resource_subcategory_index_path
 				subprocess.call(command, shell=True)
 				print "			Created index file in resources subcategory folder: " + resource_subcategory_index_path
 
@@ -141,17 +132,27 @@ def create_resource_room(repo_full_name, nav_yml_path, config_yml_path):
 				print "			Created resources subcategory posts folder: " + resource_subcategory_posts_folder_path
 
 				# Create post in subcategory posts folder
-				command = 'echo "---\nlayout: post\ntitle:  \"Sample post for ' + to_human_readable_string(name) + '\"\ndate:   2018-01-01\npermalink: \"/' + resource_title + '/' + name + '/test\"\n---" >> ' + resource_subcategory_post_path 
+				command = 'echo "---\nlayout: post\ntitle:  \"Sample post for ' + to_human_readable_string(name) + '\"\npermalink: \"/' + resource_title + '/' + name + '/test\"\n---\nLorem ipsum sit amet" >> ' + resource_subcategory_post_path 
 				subprocess.call(command, shell=True)
 				print "			Created post in resources subcategory posts folder: " + resource_subcategory_post_path
 
-				# Add resource subcategory to navigation yml
-				command = 'echo "  - title: ' + to_human_readable_string(name) + '\n    url: /' + resource_title + '/' + name + '/" >> ' + nav_yml_path
-				subprocess.call(command, shell=True)
-				print "		Added resources subcategory to navigation.yml"
-
 	except:
 		print "Failed to create resource room"
+		exit(0)
+
+def configuration_cleanup(repo_full_name, config_yml_path):
+	# Populate the remainder of the configuration for index.md and config.yml
+	try:
+		homepage_path = repo_full_name + '/index.md'
+		command = 'echo "---" >> ' + homepage_path
+		subprocess.call(command, shell=True)
+		print "Completed homepage file: " + homepage_path
+
+		command = 'echo "\n##################################################################################################################\n# Everything below this line is Isomer-specific configuration. There should not be a need to edit these settings #\n##################################################################################################################\npermalink: none\nbaseurl: \\"\\"\nexclude: [travis-script.js, .travis.yml, README.md, package.json, package-lock.json, node_modules, vendor/bundle/, vendor/cache/, vendor/gems/, vendor/ruby/, Gemfile, Gemfile.lock]\ninclude: [_redirects]\ndefaults:\n  - scope:\n      path: \\"\\"\n    values:\n      layout: \\"page\\"\n# Custom CSS file path\ncustom_css_path: \\"/misc/custom.css\\"\ncustom_print_css_path: \\"/assets/css/print.css\\"\npaginate: 12\nremote_theme: isomerpages/isomerpages-template@next-gen\nsafe: false\nplugins:\n  - jekyll-feed\n  - jekyll-assets\n  - jekyll-paginate\n  - jekyll-sitemap\ndescription: test test\n" >> ' + config_yml_path
+		subprocess.call(command, shell=True)
+		print "Completed config.yml"
+	except:
+		print "Configuration cleanup failed"
 		exit(0)
 
 def run_npm(repo_full_name):
@@ -185,6 +186,7 @@ def main():
 	create_simple_pages(repo_full_name, nav_yml_path)
 	create_leftnav_pages(repo_full_name, nav_yml_path, config_yml_path)
 	create_resource_room(repo_full_name, nav_yml_path, config_yml_path)
+	configuration_cleanup(repo_full_name, config_yml_path)
 	run_npm(repo_full_name)
 
 if __name__ == "__main__":
