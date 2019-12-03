@@ -1,25 +1,17 @@
 ---
-primary-color: '#6031b6'
-seconadary-color: '#4372d6'
-media-color-one: '#49759a'
-media-color-two: '#744d9f'
-media-color-three: '#00838f'
-media-color-four: '#00838f'
-media-color-five: '#00838f'
+
 ---
 
 @charset "utf-8";
 
-// HLB brand colors
-$primary: {{- page.primary-color -}};
-$secondary: {{- page.secondary-color -}};
+// Agency brand colors
+$primary: {{- site.colors.primary-color -}};
+$secondary: {{- site.colors.secondary-color -}};
 $secondary-hover: lighten($secondary, 10%);
 
-$media-color-one: {{- page.media-color-one -}};
-$media-color-two: {{- page.media-color-two -}};
-$media-color-three: {{- page.media-color-three -}};
-$media-color-four: {{- page.media-color-four -}};
-$media-color-five: {{- page.media-color-five -}};
+{%- for media-color in site.colors.media-colors -%}
+  ${{- media-color.title -}}: {{- media-color.color -}};
+{%- endfor -%}
 
 $gap: 32px !default;
 $desktop: 960px + (2 * $gap) !default;
