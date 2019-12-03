@@ -39,36 +39,14 @@ $desktop: 960px + (2 * $gap) !default;
     background-color: $secondary !important;
   }
   &-media-color {
-  	&-1 {
-  		background-color: $media-color-one;
-  		&:hover {
-  			background-color: darken($media-color-one, 10%);
-		}
-  	}
-  	&-2 {
-  		background-color: $media-color-two;
-  		&:hover {
-  			background-color: darken($media-color-two, 10%);
-		}
-  	}
-  	&-3 {
-  		background-color: $media-color-three;
-  		&:hover {
-  			background-color: darken($media-color-three, 10%);
-		}
-  	}
-  	&-4 {
-  		background-color: $media-color-four;
-  		&:hover {
-  			background-color: darken($media-color-four, 10%);
-		}
-  	}
-  	&-5 {
-  		background-color: $media-color-five;
-  		&:hover {
-  			background-color: darken($media-color-five, 10%);
-		}
-  	}
+    {%- for media-color in site.colors.media-colors -%}
+      &-{{- forloop.index -}} {
+        background-color: ${{- media-color.title -}};
+        &:hover {
+          background-color: darken(${{- media-color.title -}}, 10%);
+        }
+      }
+    {%- endfor -%}
   }
   &-1{
     //background-color: $primary;
