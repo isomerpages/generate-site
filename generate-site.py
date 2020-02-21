@@ -158,8 +158,10 @@ def configuration_cleanup(repo_full_name, config_yml_path):
 def run_npm(repo_full_name):
 	try:
 		subprocess.check_call("npm init -y", cwd=repo_full_name, shell=True)
-		subprocess.check_call("npm install @isomerpages/isomerpages-travisci-scripts", cwd=repo_full_name, shell=True)
-		print "Isomer TravisCI scripts successfully installed! Remember to configure SLACK_URI on TravisCI and uncomment the code in travis-script.js for production."
+
+		# Travis scripts are no longer used in repos
+		# subprocess.check_call("npm install @isomerpages/isomerpages-travisci-scripts", cwd=repo_full_name, shell=True)
+		# print "Isomer TravisCI scripts successfully installed! Remember to configure SLACK_URI on TravisCI and uncomment the code in travis-script.js for production."
 	except:
 		print "Failed to initialize npm package and/or install TravisCI script package from npm"
 		exit(0)
