@@ -122,7 +122,7 @@ def create_resource_room(repo_full_name, nav_yml_path, config_yml_path):
 				print("		Created resources subcategory folder: " + resource_subcategory_folder_path)
 
 				# Create index file in subcategory folder
-				command = 'echo "---\nlayout: resources-alt\ntitle: ' + to_human_readable_string(resource_title) + '\n---" >> ' + resource_subcategory_index_path
+				command = 'echo "---\nlayout: resources-alt\ntitle: ' + to_human_readable_string(name) + '\n---" >> ' + resource_subcategory_index_path
 				subprocess.call(command, shell=True)
 				print("			Created index file in resources subcategory folder: " + resource_subcategory_index_path)
 
